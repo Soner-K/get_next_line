@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 16:08:17 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/11/24 22:46:52 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/11/24 23:18:19 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	ft_lst_to_str(char *str, t_list *first)
 // int main()
 // {
 // 	char *str= malloc(sizeof(char) * 50);
-// 	strcpy(str,"cava\nou\nquoi\n");
+// 	strcpy(str,"wdssquoi");
 // 	char	*str2;
 // 	str2 = ft_newkeep(str);
 // 	printf("%s", str2);

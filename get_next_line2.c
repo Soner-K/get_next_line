@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:08:20 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/11/24 23:02:49 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/11/24 23:28:13 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,32 +40,35 @@ t_list	*ft_lstnew(size_t nbytes, int fd)
 	return (new);
 }
 
-char	*ft_findline(int fd, t_list **lst)
+char	*ft_findline(char *str, int fd, t_list **lst)
 {
-	char	*str;
+	char	*new;
 	t_list	*first;
 
-	*lst = ft_lstnew(BUFFER_SIZE, fd);
+	if (*str)
+		ft_memcpy((*lst)->content, str, ft_strlen(str));
+	else
+		*lst = ft_lstnew(BUFFER_SIZE, fd);
 	first = *lst;
 	if (!(*lst))
 		return (NULL); // retourner null?
 	while (!ft_check((*lst)->content, '\n'))
 	{
-		(*lst)->next = ft_lstnew(BUFFER_SIZE, fd);
-		(*lst) = (*lst)->next;
+		(*lst) = (*lst)->next; // laisser ici si ftmemcp car la liste navance pas avant
+		(*lst) = ft_lstnew(BUFFER_SIZE, fd);
 		if (!(*lst))
 			return (NULL);
 	}
 	(*lst)->next = NULL;
 	*lst = first;
-	str = malloc(sizeof(char) * ft_lstlen(*lst, 1) + 1);
+	new = malloc(sizeof(char) * ft_lstlen(*lst, 1) + 1);
 	if (!str)
 		return (NULL);
-	str[ft_lstlen(*lst, 1)] = 0;
-	ft_lst_to_str(str, *lst);
+	new[ft_lstlen(*lst, 1)] = 0;
+	ft_lst_to_str(new, *lst);
 	// *lst = first;
 	ft_lstclear(lst, free);
-	return (str);
+	return (new);
 }
 
 char	*ft_newkeep(char *str)
@@ -73,6 +76,8 @@ char	*ft_newkeep(char *str)
 	size_t		index_cut;
 	static char	*new_keep;
 
+	if (!ft_check(str, '\n'))
+		return (str);
 	index_cut = ft_check(str, '\n') + 1;
 	new_keep = malloc(sizeof(char) * ft_strlen(str) + 1 - index_cut);
 	if (!new_keep)
@@ -107,7 +112,7 @@ char	*get_next_line(int fd)
 	printf("keep debut gnl %s\n", keep);
 	if (!keep || !ft_check(keep, '\n'))
 	{
-		keep = ft_findline(fd, &lst);
+		keep = ft_findline(keep, fd, &lst);
 		// prototypée en char keep restera static ?
 		first = keep;
 		printf("keep si !keep %s\n", keep);
@@ -135,8 +140,4 @@ int	main(void)
 	printf("gnl = %s", get_next_line(fd));
 	printf("gnl = %s", get_next_line(fd));
 	printf("gnl = %s", get_next_line(fd));
-
-	// 	// t_list *lst;
-	// 	// ft_findline(fd, &lst);
-	// 	// printf("%s\n", (char *)ft_lstnew(BUFFER_SIZE, fd));
 }

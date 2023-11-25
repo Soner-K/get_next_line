@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 16:08:20 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/11/24 23:28:13 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/11/25 15:53:51 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ char	*ft_findline(char *str, int fd, t_list **lst)
 	}
 	(*lst)->next = NULL;
 	*lst = first;
-	new = malloc(sizeof(char) * ft_lstlen(*lst, 1) + 1);
-	if (!str)
+	new = malloc(sizeof(char) * ft_lstlen(*lst, 1) + 1 + ft_strlen(str));
+	if (!new)
 		return (NULL);
-	new[ft_lstlen(*lst, 1)] = 0;
+	new[ft_lstlen(*lst, 1) + ft_strlen(str)] = 0;
 	ft_lst_to_str(new, *lst);
 	// *lst = first;
 	ft_lstclear(lst, free);

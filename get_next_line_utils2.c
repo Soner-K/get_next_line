@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 16:08:17 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/11/24 23:18:19 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/11/25 21:39:11 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,11 @@
 #include <string.h>
 #include <unistd.h>
 
-size_t	ft_check(char *str, char c)
+size_t	ft_check(char *str, int c)
 {
 	size_t	i;
 
 	i = 0;
-	//static auto a 0 donc pas besoin de if !null mais attention o k ou
 	while (str[i])
 	{
 		if (str[i] == c)
@@ -31,6 +30,7 @@ size_t	ft_check(char *str, char c)
 	}
 	return (0);
 }
+
 
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
@@ -76,59 +76,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-size_t	ft_lstlen(t_list *lst, char binary)
-{
-	size_t	count;
-
-	count = 0;
-	if (binary == 1)
-	{
-		while (lst)
-		{
-			count += ft_strlen(lst->content);
-			lst = lst->next;
-		}
-		return (count);
-	}
-	while (lst)
-	{
-		if (ft_check(lst->content, '\n') || (*(lst->content) == '\n'))
-		{
-			count += ft_check(lst->content, '\n');
-			return (count);
-		}
-		else
-			count += ft_strlen(lst->content);
-		lst = lst->next;
-	}
-	return (count);
-}
-
-void	ft_lst_to_str(char *str, t_list *first)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (first)
-	{
-		while (first->content[j])
-			str[i++] = first->content[j++];
-		first = first->next;
-		j = 0;
-	}
-}
-
-// int main()
-// {
-// 	char *str= malloc(sizeof(char) * 50);
-// 	strcpy(str,"wdssquoi");
-// 	char	*str2;
-// 	str2 = ft_newkeep(str);
-// 	printf("%s", str2);
-// 	free(str2);
-// }
 // int	main(void)
 // {
 // 	t_list	*lst;
@@ -157,12 +104,10 @@ void	ft_lst_to_str(char *str, t_list *first)
 // 	lst->next = lst2;
 // 	lst2->next = lst3;
 // 	lst3->next = NULL;
-// 	count = ft_lstlen(lst, 0);
-// 	printf("count = %zu\n", count);
 // 	str = malloc(sizeof(char) * ft_lstlen(lst, 0) + 1);
 // 	if (!str)
 // 		return (0);
-// 	ft_lst_to_str(str, lst);
+// 	ft_lst_to_str(&str, lst);
 // 	printf("%s\n", str);
 // 	free(lst->content);
 // 	free(lst2->content);

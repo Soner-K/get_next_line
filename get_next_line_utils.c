@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils4.c                             :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 17:04:19 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/11/26 22:22:23 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/11/26 22:28:56 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line2.h"
+#include "get_next_line.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>

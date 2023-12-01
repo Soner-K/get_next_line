@@ -6,15 +6,12 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:00:18 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/12/01 17:26:10 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/12/01 20:04:44 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 void	store_in_line(char **keep, char **line) // bytes_read?
 {
@@ -42,7 +39,7 @@ void	remove_from_keep(char **keep)
 	char	*tmp;
 	size_t	line_index;
 
-	if (!ft_check(*keep, '\n'))
+	if (!ft_check(*keep, '\n')) // ??
 	{
 		*keep = NULL;
 		return ;
@@ -60,30 +57,59 @@ void	remove_from_keep(char **keep)
 	free(tmp);
 }
 
+// void	store_in_keep(int fd, int *bytes_read, char **keep)
+// {
+// 	char	*tmp;
+// 	char	*to_del;
+
+// 	while (!(ft_check(*keep, '\n')) && (*bytes_read) != 0)
+// 	{
+// 		tmp = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+// 		if (!tmp)
+// 			return ;
+// 		tmp[BUFFER_SIZE] = 0;
+// 		*bytes_read = (int)read(fd, tmp, BUFFER_SIZE);
+// 		if ((*bytes_read) > 0)
+// 		{
+// 			to_del = *keep;
+// 			*keep = ft_strjoin(*keep, tmp, *bytes_read);
+// 			free(to_del);
+// 			if (!(*keep))
+// 			{	
+// 				free(tmp);
+// 				return ;
+// 			}
+		
+// 		}
+// 		free(tmp);
+// 	}
+// 	// if ((*bytes_read) <= 0 && !(*keep))
+// 	// 	free(tmp);
+// }
+
+
 void	store_in_keep(int fd, int *bytes_read, char **keep)
 {
-	char	*tmp;
+	char	tmp[BUFFER_SIZE + 1];
+	char	*to_del;
 
-	tmp = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	tmp[BUFFER_SIZE] = 0;
 	while (!(ft_check(*keep, '\n')) && (*bytes_read) != 0)
 	{
-		tmp = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 		tmp[BUFFER_SIZE] = 0;
 		*bytes_read = (int)read(fd, tmp, BUFFER_SIZE);
 		if ((*bytes_read) > 0)
 		{
-			*keep = ft_strjoin(*keep, tmp);
+			to_del = *keep;
+			*keep = ft_strjoin(*keep, tmp, *bytes_read);
+			free(to_del);
 			if (!(*keep))
-			{
-				free(tmp);
 				return ;
-			}
 		}
-		free(tmp);
 	}
-	// free(tmp);
+	// if ((*bytes_read) <= 0 && !(*keep))
+	// 	free(tmp);
 }
+
 
 char	*get_next_line(int fd)
 {
@@ -92,12 +118,12 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	bytes_read = 1;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, keep, 0))
 		return (NULL);
 	if (!keep || !ft_check(keep, '\n'))
 	{
 		store_in_keep(fd, &bytes_read, &keep);
-		if (bytes_read == 0 && !keep)
+		if (bytes_read <= 0 && !keep)
 		{
 			free(keep);
 			return (NULL);
@@ -111,27 +137,20 @@ char	*get_next_line(int fd)
 	remove_from_keep(&keep);
 	return (line);
 }
+// #include <fcntl.h>
 
 // int	main(void)
 // {
 // 	int fd = open("text.txt", O_RDONLY);
-// 	printf("%d\n", fd);
-	
-	// char	*s;
-	
-	// s = "";
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
 
-	// while (s)
-	// {
-	// 	s = get_next_line(fd);
-	// 	printf("%s", s);
-	// 	free(s);
-	// }
-	// s = get_next_line(fd);
-	// printf("%s\n", s);
-	// free(s);
+// 	char	*s;
+	
+// 	s = "";
+// 	while (s)
+// 	{
+// 		s = get_next_line(fd);
+// 		printf("%s", s);
+// 		free(s);
+// 	}
+// 	free(s);
 // }

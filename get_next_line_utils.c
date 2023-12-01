@@ -6,19 +6,18 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:00:20 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/12/01 17:26:11 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/12/01 19:45:11 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2, int bytes_read)
 {
 	char		*new;
 	size_t		size;
 
-	if (!s1 && !s2)
+	if ((!s1 && !s2) || (bytes_read <= 0))
 		return (NULL);
 	size = ft_strlen(s1) + ft_strlen(s2);
 	new = (char *) malloc(sizeof(char) * size + 1);

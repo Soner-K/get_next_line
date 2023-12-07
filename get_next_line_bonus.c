@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/03 16:16:13 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/12/07 18:02:41 by sokaraku         ###   ########.fr       */
+/*   Created: 2023/12/07 17:13:58 by sokaraku          #+#    #+#             */
+/*   Updated: 2023/12/07 18:01:15 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*file_to_keep(int fd, char *keep, int *bytes_read)
 {
@@ -95,40 +95,46 @@ char	*remove_from_keep(char *line, char *keep)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*keep;
+	static char	*keep[1024];
 	int			bytes_read;
 
 	bytes_read = 1;
 	line = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, keep, 0))
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, keep[0], 0))
 		return (NULL);
-	if (!ft_check(keep, '\n') || !keep)
-		keep = file_to_keep(fd, keep, &bytes_read);
-	if (!keep)
+	if (!ft_check(keep[fd], '\n') || !(keep[fd]))
+		keep[fd] = file_to_keep(fd, keep[fd], &bytes_read);
+	if (!(keep[fd]))
 		return (NULL);
-	line = keep_to_line(keep);
+	line = keep_to_line(keep[fd]);
 	if (!line)
 		return (NULL);
-	keep = remove_from_keep(line, keep);
-	if (!keep && !line)
+	keep[fd] = remove_from_keep(line, keep[fd]);
+	if (!(keep[fd]) && !line)
 		return (NULL);
 	return (line);
 }
 
-// #include <string.h>
-
 // int	main(void)
 // {
 // 	int fd;
+//	int fd2;
 // 	char *gnl;
-//	
-//	fd = open("text.txt", O_RDONLY);
+//	char *gnl2;
+
+// 	fd = open("text.txt", O_RDONLY);
+//	fd2 = open("text2.txt", O_RDONLY);
 // 	gnl = "";
-// 	while (gnl)
+//	gnl2 = "";
+// 	while (gnl || gnl2)
 // 	{
 // 		gnl = get_next_line(fd);
-// 		printf("%s", gnl);
+//		gnl2 = get_next_line(fd2);
+// 		printf("fd = %d %s", fd, gnl);
+//		printf("fd = %d %s", fd2, gnl2);
 // 		free(gnl);
+//		free(gnl2);
 // 	}
 // 	free(gnl);
+//	free(gnl2);
 // }

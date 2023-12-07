@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:16:13 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/12/03 18:32:40 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/12/07 17:02:45 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,33 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-// char	*ft_fuse(char *s1, char *s2)
-// {
-// 	size_t	i;
-// 	size_t	j;
-// 	char	*new;
+char	*file_to_keep(int fd, char *keep, int *bytes_read)
+{
+	char	*tmp;
 
-// 	i = -1;
-// 	j = 0;
-// 	if (!s1 && !s2)
-// 		return (NULL);
-// 	new = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
-// 	if (!new)
-// 		return (NULL);
-// 	if (s1)
-// 	{
-// 		while (++s1[i])
-// 		{
-// 			new[i] = s1[i];
-// 		}
-// 	}
-// 	if (s2)
-// 	{
-// 		while (s2[j])
-// 			new[i++] = s2[j++];
-// 	}
-// 	new[i] = 0;
-// 	return (new);
-// }
+	while (!ft_check(keep, '\n') && (*bytes_read) > 0)
+	{
+		tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
+		if (!tmp)
+			return (NULL);
+		*bytes_read = read(fd, tmp, BUFFER_SIZE);
+		tmp[*bytes_read] = 0;
+		if ((*bytes_read) < 0)
+		{
+			free(keep);
+			free(tmp);
+			return (NULL);
+		}
+		if ((*bytes_read) > 0)
+		{
+			keep = ft_fuse(keep, tmp);
+			if (!keep)
+				return (NULL);
+		}
+		free(tmp);
+	}
+	return (keep);
+}
 
 char	*keep_to_line(char *keep)
 {
@@ -50,9 +49,9 @@ char	*keep_to_line(char *keep)
 
 	i = 0;
 	if (ft_check(keep, '\n'))
-		line = ft_calloc(ft_check(keep, '\n') + 2, sizeof(char));
+		line = malloc(sizeof(char) * ft_check(keep, '\n') + 2);
 	else
-		line = ft_calloc(ft_strlen(keep) + 1, sizeof(char));
+		line = malloc(sizeof(char) * ft_strlen(keep) + 1);
 	if (!line)
 		return (NULL);
 	while (keep[i] != '\n' && keep[i])
@@ -80,14 +79,11 @@ char	*remove_from_keep(char *line, char *keep)
 	j = ft_strlen(keep);
 	to_del = keep;
 	if (!line || !keep || (j == i))
-	// cas de fin de fichier ou fichier vide ?
 	{
 		free(keep);
 		return (NULL);
 	}
-	// while (keep[i] && (keep[i] == line[i]))
-	// 	i++;
-	new_keep = ft_calloc(j - i + 1, sizeof(char));
+	new_keep = malloc(sizeof(char) * (j - i) + 1);
 	if (!new_keep)
 		return (NULL);
 	j = 0;
@@ -102,11 +98,14 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*keep;
+	int			bytes_read;
 
+	bytes_read = 1;
+	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, keep, 0))
 		return (NULL);
 	if (!ft_check(keep, '\n') || !keep)
-		keep = file_to_keep(fd, keep);
+		keep = file_to_keep(fd, keep, &bytes_read);
 	if (!keep)
 		return (NULL);
 	line = keep_to_line(keep);
@@ -118,19 +117,25 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#include <string.h>
+// #include <string.h>
 
 // int	main(void)
 // {
 // 	int fd;
 // 	char *s;
 
-// 	fd = open("nl", O_RDONLY);
+// 	// fd = open("alternate_line_nl_with_nl", O_RDONLY);
+// 	// fd = open("41_no_nl", O_RDONLY);
+// 	fd = open("43_no_nl", O_RDONLY); // 1ko
+// 	// fd = open("43_with_nl", O_RDONLY); // 2ko
+// 	// fd = open("multiple_nlx5", O_RDONLY);
+// 	// fd = open("nl", O_RDONLY);
 // 	s = "";
 // 	while (s)
 // 	{
 // 		s = get_next_line(fd);
-// 		printf("gnl = %s", s);
+// 		printf("%s", s);
+// 		// printf("\n%zu\n", ft_strlen(s));
 // 		free(s);
 // 	}
 // 	free(s);

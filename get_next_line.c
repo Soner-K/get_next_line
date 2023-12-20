@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:16:13 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/12/07 18:02:41 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:58:16 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,17 @@ char	*remove_from_keep(char *line, char *keep)
 	return (new_keep);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, char binary)
 {
 	char		*line;
 	static char	*keep;
 	int			bytes_read;
 
+	if (binary == 1)
+	{
+		free(keep);
+		return (NULL);
+	}
 	bytes_read = 1;
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, keep, 0))

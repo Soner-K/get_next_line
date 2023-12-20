@@ -6,7 +6,7 @@
 /*   By: sokaraku <sokaraku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 17:13:58 by sokaraku          #+#    #+#             */
-/*   Updated: 2023/12/07 18:01:15 by sokaraku         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:58:25 by sokaraku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,17 @@ char	*remove_from_keep(char *line, char *keep)
 	return (new_keep);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, char binary)
 {
 	char		*line;
 	static char	*keep[1024];
 	int			bytes_read;
 
+	if (binary == 1)
+	{
+		free(keep[fd]);
+		return (NULL);
+	}
 	bytes_read = 1;
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, keep[0], 0))
@@ -115,26 +120,28 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+// #include <fcntl.h>
+// #include <stdio.h>
 // int	main(void)
 // {
 // 	int fd;
-//	int fd2;
+// 	int fd2;
 // 	char *gnl;
-//	char *gnl2;
+// 	char *gnl2;
 
 // 	fd = open("text.txt", O_RDONLY);
-//	fd2 = open("text2.txt", O_RDONLY);
+// 	fd2 = open("text2.txt", O_RDONLY);
 // 	gnl = "";
-//	gnl2 = "";
+// 	gnl2 = "";
 // 	while (gnl || gnl2)
 // 	{
 // 		gnl = get_next_line(fd);
-//		gnl2 = get_next_line(fd2);
+// 		gnl2 = get_next_line(fd2);
 // 		printf("fd = %d %s", fd, gnl);
-//		printf("fd = %d %s", fd2, gnl2);
+// 		printf("fd = %d %s", fd2, gnl2);
 // 		free(gnl);
-//		free(gnl2);
+// 		free(gnl2);
 // 	}
 // 	free(gnl);
-//	free(gnl2);
+// 	free(gnl2);
 // }
